@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import *
+# from .filters import ProductFilter
+
 
 # Create your views here.
 class MessageList(ListView):
@@ -16,3 +18,12 @@ class MessageList(ListView):
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'messages'
     paginate_by = 2
+
+
+class MessageDetail(DetailView):
+    # Модель всё та же, но мы хотим получать информацию по отдельному товару
+    model = Message
+    # Используем другой шаблон — product.html
+    template_name = 'Detail.html'
+    # Название объекта, в котором будет выбранный пользователем продукт
+    context_object_name = 'detail'

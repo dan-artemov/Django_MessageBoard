@@ -15,12 +15,15 @@
             <hr>
             <hr>
             <h2>{{ message.message_header }}</h2>
-
             <h3>{{ message.data_create|date:'d M Y' }}</h3>
+            <h3>Автор объявления: {{ message.message_user }}</h3>
             <br>
-            <p class="lead">{{ message.message_text|truncatewords:20 }}</p>
+            <p class="lead">{{ message.message_text }}</p>
             <br>
-            {# А здесь доступ для каждой ссылки теперь будем проверять отдельно #}
+            {% if  request.user.id  !=  message.message_user.id  %}
+                <h3><a href="{% url 'message_detail' pk=message.id %}">Откликнуться на объявление</a></h3>
+            {% endif %}
+
         {% endfor %}
    {% else %}
        <h2>Статей нет!</h2>

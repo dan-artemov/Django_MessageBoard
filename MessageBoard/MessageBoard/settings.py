@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # 'django.contrib.flatpages',
 
     'Board',  # Подключаем приложение Board
+    'django_filters',
 ]
 
 SITE_ID = 1

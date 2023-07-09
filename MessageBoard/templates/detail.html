@@ -1,0 +1,25 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'default.html' %}
+
+<h1>{% block title %}Детали объявления{% endblock title %}</h1>
+
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+
+    {% if detail %}
+        <h1>Объявление:</h1>
+        <hr>
+        <hr>
+        <h2><a href="{% url 'message_detail' pk=detail.id %}">{{ detail.message_header }}</a></h2>
+        <h3>{{ detail.data_create|date:'d M Y' }}</h3>
+        <h3>Автор объявления: {{ detail.message_user }}</h3>
+        <br>
+        <p class="lead">{{ detail.message_text }}</p>
+        <br>
+        <hr>
+        <hr>
+   {% else %}
+       <h2>Объявлений нет!</h2>
+   {% endif %}
+{% endblock content %}
