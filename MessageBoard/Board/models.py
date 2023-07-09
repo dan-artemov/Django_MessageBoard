@@ -61,7 +61,7 @@ class Comment(models.Model):
     # По умолчанию значение поля = 2
     comment_status = models.IntegerField(default=2)  #
 
-    # Методы accept_the_comment() и reject_the_comment позволяют пользователю принять или отклонить отклик.
+    # Методы accept_the_comment() и reject_the_comment() позволяют пользователю принять или отклонить отклик.
     def accept_the_comment(self):
         self.comment_status = 1
         self.save()

@@ -1,0 +1,52 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'default.html' %}
+
+<!-- Название у нас будет Новые объявления -->
+{% block title %}
+Новые объявления
+{% endblock title %}
+
+{% block content %}
+<h1>Объявлений на странице: {{messages|length}}</h1>
+    {% if messages %}
+        {# Теперь будем проверять не request.user.is_authenticated, а конкретные права #}
+
+        {% for message in messages %}
+            <hr>
+            <hr>
+            <h2>{{ message.message_header }}</h2>
+
+            <h3>{{ message.data_create|date:'d M Y' }}</h3>
+            <br>
+            <p class="lead">{{ message.message_text|truncatewords:20 }}</p>
+            <br>
+            {# А здесь доступ для каждой ссылки теперь будем проверять отдельно #}
+        {% endfor %}
+   {% else %}
+       <h2>Статей нет!</h2>
+   {% endif %}
+
+   {# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}

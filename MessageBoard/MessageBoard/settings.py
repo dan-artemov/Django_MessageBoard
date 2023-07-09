@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # подключаем ещё приложения
-    'django.contrib.sites',
-    'django.contrib.flatpages',
+    # 'django.contrib.sites',
+    # 'django.contrib.flatpages',
 
     'Board',  # Подключаем приложение Board
 ]
@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    # 'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'MessageBoard.urls'
