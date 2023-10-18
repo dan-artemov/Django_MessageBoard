@@ -1,0 +1,14 @@
+<!--  наследуемся от шаблона default.html -->
+{% extends 'default.html' %}
+
+<h1>{% block title %}Удаление Объявления{% endblock title %}</h1>
+
+
+{% block content %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>Удаляем "{{ object.message_header }}"?</p>
+        <input type="submit" value="Delete" />
+    </form>
+{% endblock content %}

@@ -4,7 +4,7 @@
 <h1>{% block title %}Детали объявления{% endblock title %}</h1>
 
 
-<!-- В контенте на странице мы выводим все товары -->
+<!-- В контенте на странице выводим выбранное Объявление -->
 {% block content %}
 
     {% if detail %}
@@ -16,7 +16,27 @@
         <h3>Автор объявления: {{ detail.message_user }}</h3>
         <br>
         <p class="lead">{{ detail.message_text }}</p>
+        {% if perms.board.change_message %}
+            <a href="{% url 'message_edit' pk=message.id %}">Изменить</a>
+        {% endif %}
+        {% if perms.board.delete_message %}
+            <a href="{% url 'message_delete' message.id %}">/Удалить</a>
+        {% endif %}
         <br>
+        <p class="lead">{{ detail.c_message.first.comment_status }}</p>
+        <!-- Выведем принятые и не рассмотренные отклики на Объявление -->
+        {% for c in detail.c_message.all  %}
+
+            {% if c.comment_status != 0 %}
+                <hr>
+                <hr>
+                {{ c.data_create }}
+                <p class="lead">Статус отклика на объявление:{{ c.comment_status }}</p>
+                <p class="lead">Автор отклика:{{ c.user }}</p>
+                <p class="lead">Содержание отклика:{{ c.comment }}</p>
+            {% endif %}
+        {% endfor %}
+
         <hr>
         <hr>
    {% else %}

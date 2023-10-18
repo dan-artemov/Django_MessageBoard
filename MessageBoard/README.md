@@ -26,6 +26,35 @@
 - Установлен пакет python -m pip install django-filter
 - Создан файл board/filter.py, а также в settings.py добавлено приложение 'django_filters'
 
+### 2023/07/13
+- !!!!Необходимо переопределить модель Message, удалить изб модель категории и переписать команды заполнения в shell пример кода ниже:
+```python
+class Ann(models.Model):
+    TYPE = (
+        ('Tanki', 'Танки'),
+        ('Hils', 'Хилы'),
+        ('DD', 'ДД'),
+        ('Sales', 'Торговцы'),
+        ('Gildmasters', 'Гилдмастеры'),
+        ('Questgivers', 'Квестгиверы'),
+        ('Kuznets', 'Кузнецы'),
+        ('Kozhevniki', 'Кожевники'),
+        ('Zelevars', 'Зельевары'),
+        ('Magicmasters', 'Мастера заклинаний'),
+    )
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    time_in = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=64)
+    text = models.TextField()
+    category = models.CharField(max_length=32, choices=TYPE, default='Tanki')
+    upload = models.FileField(upload_to='images/', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.title}: {self.text}'
+
+    def get_absolute_url(self):
+        return reverse('ann_detail', args=[str(self.id)])
+```
 
 
 

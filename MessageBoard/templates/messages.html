@@ -22,6 +22,9 @@
             <br>
             {% if  request.user.id  !=  message.message_user.id  %}
                 <h3><a href="{% url 'message_detail' pk=message.id %}">Откликнуться на объявление</a></h3>
+            {% else %}
+                <h3><a href="{% url 'message_edit' pk=message.id %}">Изменить</a> |
+                <a href="{% url 'message_delete' message.id %}">Удалить</a></h3>
             {% endif %}
 
         {% endfor %}

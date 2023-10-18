@@ -1,0 +1,26 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+<h1 class ="display-4 text-primary mt-auto">Регистрация нового пользователя</h1>
+<br>
+<form method="post">
+{% csrf_token %}
+<!--    <div class="container">-->
+        <h3>
+        {% for f in form %}
+        <label for="{{ f.id_for_label }}">{{ f.label }}:   </label>{{ f }}
+            <div class="display-6 text-danger mt-auto">
+                <p>{{ f.errors }}</p>
+            </div>
+        {% endfor %}
+        </h3>
+<!--    </div>-->
+
+
+<!--    {{ form.as_p }}-->
+    <input type="submit" class="lead" value="Зарегистрироваться">
+
+</form>
+
+{% endblock %}

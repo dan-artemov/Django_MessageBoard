@@ -27,26 +27,69 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# AUTH_USER_MODEL = 'accounts.author'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # подключаем ещё приложения
-    # 'django.contrib.sites',
-    # 'django.contrib.flatpages',
-
-    'Board',  # Подключаем приложение Board
     'django_filters',
+
+    'accounts', # Подключаем приложение accounts
+    'Board',  # Подключаем приложение Board
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.yandex',
+
+
 ]
 
 SITE_ID = 1
+
+LOGIN_REDIRECT_URL = "/messages"
+LOGOUT_REDIRECT_URL = "/messages"
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "dan-artemov"
+EMAIL_HOST_PASSWORD = "nvwxchkbirvcujvm"
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+
+
+
+DEFAULT_FROM_EMAIL = "dan-artemov@yandex.ru"
+
+SERVER_EMAIL = "dan-artemov@yandex.ru"
+MANAGERS = (
+    ('Ivan', 'dan-artemov@yandex.ru'),
+    ('Petr', 'dan-artemov@yandex.ru'),
+)
+ADMINS = (
+    ('anton', 'dan-artemov@yandex.ru'),
+)
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
+# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'login.html'
+
+ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
+
 
 
 MIDDLEWARE = [
@@ -57,8 +100,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    # 'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+            # 'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'MessageBoard.urls'
@@ -77,6 +120,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'MessageBoard.wsgi.application'
@@ -137,3 +185,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+
