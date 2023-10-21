@@ -24,7 +24,7 @@ class Message(models.Model):
     message_text = models.TextField(default="")  # Текстовое содержимое объявления
     data_create = models.DateTimeField(auto_now_add=True)  # автоматически добавляемая дата и время создания объявления
     # category = models.CharField(max_length=20, choices=VARIETY, default='Tanks', blank=False)
-    # picture = models.ImageField(upload_to='images/', null=True, blank=True)
+    # files = models.FileField(upload_to='files/%Y/%m/%d', null=True, blank=True)
     # Создадим связи с другими моделями
     # связь «один ко многим» с моделью User
     message_user = models.ForeignKey(User, related_name='m_user', on_delete=models.CASCADE)
