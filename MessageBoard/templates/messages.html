@@ -13,16 +13,15 @@
 
         {% for message in messages %}
             <hr>
-            <hr>
             <h2>{{ message.message_header }}</h2>
-            <h3>{{ message.data_create|date:'d M Y' }}</h3>
-            <h3>Автор объявления: {{ message.message_user }}</h3>
+            <h3>{{ message.data_create|date:'d M Y' }}  |  Категория: {{ message.get_category_display }}  |  Автор: {{ message.message_user }}</h3>
             <br>
             <p class="lead">{{ message.message_text }}</p>
             <br>
             {% if  request.user.id  !=  message.message_user.id  %}
-                <h3><a href="{% url 'message_detail' pk=message.id %}">Откликнуться на объявление</a></h3>
+                <h3><a href="{% url 'message_detail' pk=message.id %}">Перейти к объявлению</a></h3>
             {% else %}
+                <h3><a href="{% url 'message_detail' pk=message.id %}">Перейти к объявлению</a></h3>
                 <h3><a href="{% url 'message_edit' pk=message.id %}">Изменить</a> |
                 <a href="{% url 'message_delete' message.id %}">Удалить</a></h3>
             {% endif %}

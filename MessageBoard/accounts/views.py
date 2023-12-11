@@ -1,12 +1,15 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
+from django.views.generic import TemplateView
+from django.urls import reverse
 from accounts.forms import VerifyCodeForm
 from accounts.models import *
 
+
 # Create your views here.
 def register_confirm(request, pk):
-    cong = ''
+    code = None
     if User.objects.filter(pk=pk).exists():
         author = User.objects.get(pk=pk)
         code = author.v_user.code
@@ -19,18 +22,22 @@ def register_confirm(request, pk):
             if code == form.cleaned_data['code']:
                 authorized_users = Group.objects.get(name="authorized_users")
                 author.groups.add(authorized_users)
-                cong = "Поздравляем с успешной регистрацией на сайте"
-                # return redirect(to=reverse_lazy("login"))
+                return HttpResponseRedirect(reverse('success'))
             else:
                 form.add_error('code', 'Некорректный код подтверждения')
-    #         ('Некорректный код подтверждения')
+
     else:
         form = VerifyCodeForm
     data = {'title': 'Завершите регистрацию',
-            'header1': 'Для завершения регистрации введите код подтверждения, направленный на адрес, указанный при регистрации',
-            'cong': cong,
+            'header1': 'Для завершения регистрации введите код подтверждения, '
+                       'направленный на адрес, указанный при регистрации',
             'author': author,
             'form': form,
             }
 
     return render(request, 'registration/register_confirm.html', context=data)
+
+
+class Success(TemplateView):
+    template_name = 'registration/success.html'
+    pass

@@ -5,21 +5,19 @@
 {% if author.email %}
 <p class ="display-6 text-primary mt-auto">{{ header1 }}</p>
 <br>
-   <h3>
+
 
        <p class ="display-6 text-primary mt-auto">{{ author.email }}</p>
-       <p class ="display-6 text-primary mt-auto">{{ cong }}</p>
+
         <br>
               <form method="post">
            {% csrf_token %}
            <div class="display-6 text-danger mt-auto">
                 <p>{{ form.non_field_errors }}</p>
             </div>
-<!--           {{ form.as_p }}-->
-           <p><label for="{{ form.code.id_for_label}}">{{ form.code.label }} </label> {{ form.code }}
+           <p><label>{{ form.code.label }} </label> {{ form.code }}
                <button type="submit">Подтвердить email</button>
            </p>
-
             <div class="display-6 text-danger mt-auto">
                 <p>{{ form.errors }}</p>
             </div>
@@ -28,20 +26,8 @@
 {% else %}
          <div class="display-6 text-danger mt-auto">
             <p>Пользователь не найден, либо у пользователя отсутствует email.</p>
-             <p>Обратитесь в поддержку, направив письмо по адресу</p> dan-artemov@yandex.ru
+             <p>Обратитесь в поддержку, направив письмо по адресу</p> admin@user.com
          </div>
-
-
 {% endif %}
 
-
-<!--       <form method="post" action="{% url 'login1' %}">-->
-<!--           {% csrf_token %}-->
-<!--           {{ form.as_p }}-->
-<!--           <button type="submit">Подтвердить email</button>-->
-
-<!--       </form>-->
-<!--       -->
-
-   </h3>
 {% endblock %}

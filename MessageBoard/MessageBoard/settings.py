@@ -11,16 +11,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^@!*5$#g5(h5lj)99mo-r%t18so1(@)2mbzmjr8jifmi-8$d8^'
+
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,13 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
 
-    'accounts', # Подключаем приложение accounts
+    'accounts',  # Подключаем приложение accounts
     'Board',  # Подключаем приложение Board
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
 
+    'django_extensions',
+    'django_apscheduler',  # подключаем пакет периодического выполнения задач в стиле cron
 
 ]
 
@@ -60,37 +63,21 @@ LOGOUT_REDIRECT_URL = "/messages"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "dan-artemov"
-EMAIL_HOST_PASSWORD = "nvwxchkbirvcujvm"
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
-
-
-
-DEFAULT_FROM_EMAIL = "dan-artemov@yandex.ru"
-
-SERVER_EMAIL = "dan-artemov@yandex.ru"
-MANAGERS = (
-    ('Ivan', 'dan-artemov@yandex.ru'),
-    ('Petr', 'dan-artemov@yandex.ru'),
-)
-ADMINS = (
-    ('anton', 'dan-artemov@yandex.ru'),
-)
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = config("SERVER_EMAIL")
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'login.html'
 
 ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,7 +115,6 @@ AUTHENTICATION_BACKENDS = [
 
 WSGI_APPLICATION = 'MessageBoard.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -138,7 +124,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -158,7 +143,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -169,7 +153,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -185,7 +168,5 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
-

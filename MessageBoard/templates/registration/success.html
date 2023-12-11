@@ -1,0 +1,7 @@
+{% extends "default.html" %}
+{% block content %}
+
+<p class ="display-6 text-primary mt-auto">Регистрация успешно завершена!</p>
+<p class ="text-primary mt-auto">After 5 seconds you will be redirected to the main page</p>
+<meta http-equiv="refresh" content="5;url={% url 'message_list' %}">
+{% endblock %}

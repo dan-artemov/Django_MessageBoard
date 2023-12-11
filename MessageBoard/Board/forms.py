@@ -2,19 +2,22 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Message
+from .models import Message, Comment
 from django.core.exceptions import ValidationError
 
 
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
+        template_name = 'message_create.html'
         fields = [
             # 'message_user', # не требуется вывод данного поля, т.к. в соответствующем view автор будет добавлен
             'message_header',
             'message_text',
             'category',
-            # 'post_type'
+            'photo',
+            'files',
+
         ]
 
     def clean_post_header(self):
@@ -24,6 +27,22 @@ class MessageForm(forms.ModelForm):
                 "Название должно начинаться с заглавной буквы"
             )
         return name
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            # 'message_user', # не требуется вывод данного поля, т.к. в соответствующем view автор будет добавлен
+            'comment',
+        ]
+
+    # def clean_post_header(self):
+    #     name = self.cleaned_data["message_header"]
+    #     if name[0].islower():
+    #         raise ValidationError(
+    #             "Название должно начинаться с заглавной буквы"
+    #         )
+    #     return name
 
 
 class RegisterUserForm(UserCreationForm):

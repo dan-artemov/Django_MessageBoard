@@ -10,35 +10,70 @@
     {% if detail %}
         <h1>Объявление:</h1>
         <hr>
-        <hr>
-        <h2><a href="{% url 'message_detail' pk=detail.id %}">{{ detail.message_header }}</a></h2>
-        <h3>{{ detail.data_create|date:'d M Y' }}</h3>
-        <h3>Автор объявления: {{ detail.message_user }}</h3>
+        <h2>{{ detail.message_header }}</h2>
+
+        <h3>{{ detail.data_create|date:'d M Y' }}  |  Категория: {{ detail.get_category_display }}  |  Автор: {{ detail.message_user }}</h3>
         <br>
         <p class="lead">{{ detail.message_text }}</p>
-        {% if perms.board.change_message %}
-            <a href="{% url 'message_edit' pk=message.id %}">Изменить</a>
+        {% if detail.photo %}
+            <hr>
+            <p><img src="{{detail.photo.url}}"  width="300px"></p>
+            <p>(Оригинальный размер картинки  {{ detail.photo.width }}x{{ detail.photo.height }})</p>
         {% endif %}
-        {% if perms.board.delete_message %}
-            <a href="{% url 'message_delete' message.id %}">/Удалить</a>
+        {% if detail.files %}
+            <hr>
+            <p><a href="{{ detail.files.url }}">Посмотреть прикрепленный файл</a>  |  <a href="{% url 'download' detail.id %}">Скачать файл</a></p>
+
+
+        {% endif %}
+        {% if request.user.id  ==  detail.message_user.id %}
+            <hr>
+            {% if perms.Board.change_message %}
+                <a href="{% url 'message_edit' pk=detail.id %}">Изменить</a>
+            {% endif %}
+            {% if perms.Board.delete_message %}
+                <a href="{% url 'message_delete' detail.id %}">/Удалить</a>
+            {% endif %}
         {% endif %}
         <br>
-        <p class="lead">{{ detail.c_message.first.comment_status }}</p>
+<!--        <p class="lead">{{ detail.c_message.first.comment_status }}</p>-->
         <!-- Выведем принятые и не рассмотренные отклики на Объявление -->
+
+        {% if perms.Board.add_comment and request.user.id  !=  detail.message_user.id%}
+            <hr>
+            <p class="lead"><a href="{% url 'comment_create' detail.id %}">Создать отклик</a></p>
+        {% endif %}
         {% for c in detail.c_message.all  %}
 
             {% if c.comment_status != 0 %}
+
                 <hr>
+                <p class="text-black-50, text-start" ><strong>{{ c.data_create }}  |  Автор отклика: {{ c.user }}</strong></p>
+                <p class="text-reset">{{ c.comment }}</p>
+
+                {% if c.comment_status == 1 %}
+                    <div class="text-bg-success">Отклик принят</div>
+                {% elif c.comment_status == 2 %}
+
+                    <div class="text-bg-info">Отклик не рассмотрен
+                        {% if request.user.id == detail.message_user.id %}
+                            <a class="btn btn-primary" href="{% url 'change_status' c.id c.comment_message.id 'accept' %}">Принять отклик</a>
+                            <a class="btn btn-primary" href="{% url 'change_status' c.id c.comment_message.id 'reject' %}">Отклонить отклик</a>
+                        {% endif %}
+                    </div>
+
+                {% endif %}
+            {% elif c.comment_status == 0 and request.user.id == detail.message_user.id %}
                 <hr>
-                {{ c.data_create }}
-                <p class="lead">Статус отклика на объявление:{{ c.comment_status }}</p>
-                <p class="lead">Автор отклика:{{ c.user }}</p>
-                <p class="lead">Содержание отклика:{{ c.comment }}</p>
+                <p class="text-black-50, text-start" ><strong>{{ c.data_create }}  |  Автор отклика: {{ c.user }}</strong></p>
+                <p class="text-reset">{{ c.comment }}</p>
+
+                <div class="text-bg-warning">Отклик отклонен</div>
+
             {% endif %}
+
         {% endfor %}
 
-        <hr>
-        <hr>
    {% else %}
        <h2>Объявлений нет!</h2>
    {% endif %}

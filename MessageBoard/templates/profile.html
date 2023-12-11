@@ -1,0 +1,92 @@
+{% extends 'default.html' %}
+
+
+{% block title %}
+Личный кабинет
+{% endblock title %}
+
+{% block content %}
+
+<h2>Личный кабинет пользователя</h2>
+
+{% if perms.Board.add_message %}
+<hr>
+   {# Добавляем форму, объединяющую набор полей, которые будут отправляться в запросе #}
+<div class="lead">
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
+</div>
+
+
+
+    {% if comments %}
+        <h3>Отклики на объявления</h3>
+        {# Теперь будем проверять не request.user.is_authenticated, а конкретные права #}
+
+        {% for comment in comments %}
+            {% if request.user.id  !=  comment.user.id %}
+            <div class="bg-light">
+                <hr>
+                <p class="text-black-50, text-start" ><strong>{{ comment.data_create }}  |  Автор отклика: {{ comment.user }}  |  Объявление:
+                    <a href="{% url 'message_detail' pk=comment.comment_message.id %}">{{comment.comment_message}}</a></strong></p>
+                <p class="text-reset">{{ comment.comment }}</p>
+                            {% if comment.comment_status == 0 %}
+                                <div class="text-bg-warning">Отклик отклонен</div>
+                            {% endif %}
+                            {% if comment.comment_status == 1 %}
+                                <div class="text-bg-success">Отклик принят</div>
+                            {% endif %}
+                            {% if comment.comment_status == 2 %}
+                                <div class="text-bg-info">Отклик не рассмотрен. Выберите действие:
+                                    <a class="btn btn-primary" href="{% url 'change_status' comment.id comment.comment_message.id 'accept' %}">Принять отклик</a>
+                                    <a class="btn btn-primary" href="{% url 'change_status' comment.id comment.comment_message.id 'reject' %}">Отклонить отклик</a>
+
+                                </div>
+
+
+                            {% endif %}
+
+            {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+
+        <h3>Откликов нет!</h3>
+    {% endif %}
+
+{% else %}
+<p class ="display-6 text-primary mt-auto">Для создания собственных объявлений,
+    а также размещения откликов на объявления других пользователей портала подтвердите адрес электронной почты {{ request.user.email }} по следующей ссылке: </p>
+<a class="btn btn-primary" href="{% url 'register_confirm' request.user.id %}">Завершите регистрацию</a>
+<br>
+{% endif %}
+
+
+   {# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+{% endblock content %}

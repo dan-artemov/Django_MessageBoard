@@ -17,44 +17,40 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 {% if user.is_authenticated %}
-                <a class="navbar-brand" href="#">Wellcome! {{request.user}}</a>
+                    <a class="navbar-brand" href="{% url 'profile' %}">Перейти в профиль: {{request.user.email}}</a>
+                    {% if not perms.Board.add_message %}
+                        <a class="navbar-brand" href="{% url 'register_confirm' request.user.id %}">  |  Завершите регистрацию</a>
+                    {% else %}
+
+                    {% endif %}
+                {% else %}
+                    <div class="navbar-brand">Не авторизованный пользователь:
+                        <a class="navbar-brand" href="{% url 'register' %}">Зарегистрируйтесь</a>
+                        или
+                        <a class="navbar-brand" href="{% url 'login' %}">Войдите на портал</a>
+                    </div>
                 {% endif %}
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'message_list' %}">Главная</a></li>
-                        {% if user.is_authenticated %}
+
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">{{request.user.username}}</a>
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">Меню</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                {% if perms.Board.add_message %}
-                                <li><a class="dropdown-item" href="{% url 'message_create' %}">Добавить статью</a></li>
-                                <li><hr class="dropdown-divider" /></li>
+                                {% if user.is_authenticated %}
+                                    {% if perms.Board.add_message %}
+                                        <li><a class="dropdown-item" href="{% url 'message_create' %}">Добавить статью</a></li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                    {% endif %}
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'register' %}">Регистрация</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'login' %}">Ввести логин</a></li>
+                                    <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/">Админка</a></li>
                                 {% endif %}
-
-
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                                <li><hr class="dropdown-divider" /></li>
                             </ul>
                         </li>
-                        {% else %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">{{request.user.username}}</a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{% url 'register' %}">Регистрация A</a></li>
-                                <li><a class="dropdown-item" href="{% url 'login' %}">Login A</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="{% url 'register1' %}">Регистрация</a></li>
-                                <li><a class="dropdown-item" href="{% url 'login1' %}">Login 1</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/">Админка</a></li>
-
-                            </ul>
-                        </li>
-                        {% endif %}
-
-
-
                     </ul>
                 </div>
             </div>

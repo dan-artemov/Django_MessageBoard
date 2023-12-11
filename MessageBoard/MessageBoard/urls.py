@@ -38,5 +38,6 @@ urlpatterns = [
     # path("register_confirm/<int:pk>/", register_confirm, name="register_confirm"),
 ]
 
+# включаем возможность обработки картинок
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
